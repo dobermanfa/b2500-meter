@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 class TibberPowermeter(Powermeter):
     def __init__(self, config):
-        super().__init__(config)
         self.access_token = config.get("ACCESS_TOKEN")
         self.home_id = config.get("HOME_ID")
         self.user_agent = "home-assistant/b2500-meter"
