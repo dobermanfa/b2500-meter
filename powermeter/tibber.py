@@ -1,5 +1,4 @@
 import logging
-import asyncio
 import tibber
 from .base import Powermeter
 from .throttling import Throttling
@@ -9,23 +8,23 @@ logger = logging.getLogger(__name__)
 class TibberPowermeter(Powermeter):
     def __init__(self, config):
         self.access_token = config.get("ACCESS_TOKEN")
+        self.home_id = config.get("HOME_ID")
         self.throttle = Throttling(config.get("THROTTLE_INTERVAL", 2))
-        self.tibber_connection = tibber.Tibber(self.access_token)
-        self.loop = asyncio.new_event_loop()
+        self.user_agent = "home-assistant/b2500-meter"
+        self.account = tibber.Account(self.access_token)
+        self.home = None
         self.power_consumption = 0
         self.power_production = 0
         
-        async def setup_connection():
-            await self.tibber_connection.update_info()
-            home = self.tibber_connection.get_homes()[0]
-            await home.rt_subscribe(lambda data: self._callback(data))
+        # Setup synchronous wrapper around async Tibber API
+        self.home = self.account.get_home(self.home_id)
+        
+        @self.home.event("live_measurement")
+        def update_power_data(data):
+            self.power_consumption = data.power
+            self.power_production = data.power_production or 0
             
-        self.loop.run_until_complete(setup_connection())
-
-    def _callback(self, data):
-        # Store both consumption and production values with fallback to 0
-        self.power_consumption = data.get("power", 0)
-        self.power_production = data.get("powerProduction", 0)
+        self.home.start_live_feed(user_agent=self.user_agent)
 
     def get_powermeter_watts(self):
         self.throttle.wait()

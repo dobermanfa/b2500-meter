@@ -146,9 +146,11 @@ THROTTLE_INTERVAL = 0
 ## Per-powermeter throttling override (optional)
 #THROTTLE_INTERVAL = 1
 
-#[TIBBER]
+[TIBBER]
 # Tibber API access token (required)
 ACCESS_TOKEN = your_tibber_token
+# Tibber Home ID (required)
+HOME_ID = your_home_id
 # Throttle interval for measurements (default 1 second)
 THROTTLE_INTERVAL = 1
 # Enable real-time WebSocket (true/false)
