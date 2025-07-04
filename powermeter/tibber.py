@@ -16,10 +16,7 @@ class TibberPowermeter(Powermeter):
         
         self.power_consumption = 0
         self.power_production = 0
-        
-        # Setup synchronous wrapper around async Tibber API
-        self.home = self.account.get_home(self.home_id)
-        
+               
         @self.home.event("live_measurement")
         def update_power_data(data):
             self.power_consumption = data.power
