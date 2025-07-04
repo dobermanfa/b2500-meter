@@ -19,13 +19,15 @@ class TibberPowermeter(Powermeter):
                
         @self.home.event("live_measurement")
         async def update_power_data(data):
+            logger.debug(f"Received live measurement data: {data}")
             self.power_consumption = data.power
             self.power_production = data.power_production or 0
             
         self.home.start_live_feed(user_agent=self.user_agent)
 
     def get_powermeter_watts(self):
-        return [int(self.power_consumption - self.power_production)]
+        logger.debug(f"Calculating power: consumption={self.power_consumption}, production={self.power_production}")
+        return [float(self.power_consumption - self.power_production)]
 
     def wait_for_message(self, timeout=5):
         """WebSocket connection is already maintained by Tibber library"""
