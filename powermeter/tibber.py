@@ -18,7 +18,7 @@ class TibberPowermeter(Powermeter):
         self.power_production = 0.0
         
         # Store reference to handler to avoid garbage collection
-        def _update_power_data(data: tibber.LiveMeasurement):
+        async def _update_power_data(data):
             logger.debug(f"Received live measurement data: {data.power}, production: {data.power_production}")
             self.power_consumption = getattr(data, 'power', 0.0)
             self.power_production = getattr(data, 'power_production', 0.0)
