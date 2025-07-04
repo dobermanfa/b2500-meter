@@ -10,7 +10,7 @@ class TibberPowermeter(Powermeter):
         self.home_id = config.get("HOME_ID")
         self.user_agent = "home-assistant/b2500-meter"
         self.account = tibber.Account(self.access_token)
-        self.home = self.account.homes.where(lambda h: h.id == self.home_id).first()
+        self.home = next((h for h in self.account.homes if h.id == self.home_id), None)
         if not self.home:
             raise ValueError(f"Home with ID {self.home_id} not found in Tibber account.")
         
