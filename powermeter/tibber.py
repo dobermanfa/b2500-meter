@@ -18,7 +18,7 @@ class TibberPowermeter(Powermeter):
         self.power_production = 0
                
         @self.home.event("live_measurement")
-        def update_power_data(data):
+        async def update_power_data(data):
             self.power_consumption = data.power
             self.power_production = data.power_production or 0
             
