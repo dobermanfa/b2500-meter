@@ -24,6 +24,7 @@ from powermeter import (
     JsonHttpPowermeter,
     TQEnergyManager,
     ThrottledPowermeter,
+    TibberPowermeter,
 )
 
 SHELLY_SECTION = "SHELLY"
@@ -39,7 +40,7 @@ AMIS_READER_SECTION = "AMIS_READER"
 MODBUS_SECTION = "MODBUS"
 JSON_HTTP_SECTION = "JSON_HTTP"
 TQ_EM_SECTION = "TQ_EM"
-
+TIBBER_SECTION = "TIBBER"
 
 class ClientFilter:
     def __init__(self, netmasks: List[IPv4Network]):
@@ -127,6 +128,12 @@ def create_powermeter(
         return create_json_http_powermeter(section, config)
     elif section.startswith("MQTT"):
         return create_mqtt_powermeter(section, config)
+    elif section.startswith(TIBBER_SECTION):
+        return TibberPowermeter({
+            "ACCESS_TOKEN": config.get(section, "ACCESS_TOKEN"),
+            "HOME_ID": config.get(section, "HOME_ID"),
+            "THROTTLE_INTERVAL": config.get(section, "THROTTLE_INTERVAL", fallback=2)
+        })
     else:
         return None
 
