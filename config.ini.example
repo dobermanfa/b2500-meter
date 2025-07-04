@@ -145,3 +145,11 @@ THROTTLE_INTERVAL = 0
 #COMMAND = /path/to/your/script.sh
 ## Per-powermeter throttling override (optional)
 #THROTTLE_INTERVAL = 1
+
+#[TIBBER]
+# Tibber API access token (required)
+ACCESS_TOKEN = your_tibber_token
+# Throttle interval for measurements (default 1 second)
+THROTTLE_INTERVAL = 1
+# Enable real-time WebSocket (true/false)
+REALTIME = true
